@@ -250,6 +250,8 @@ Mellow is a privacy‑first, on‑device personal AI for macOS. It learns from u
 - To be decided (MIT/Apache‑2.0 recommended). Will be finalized before public beta.
 
 ***
+## Next up!!
+- next steps will be exciting as ollama or some other low rank adapted llm will be integrated in the software workflow,,,,,,,, STAY TUNED
 
 ## Contact
 
