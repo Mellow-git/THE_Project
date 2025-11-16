@@ -186,7 +186,7 @@ Mellow is a privacy‑first, on‑device personal AI for macOS. It learns from u
 
 ## Developer API (Local)
 
-- Localhost API (dev mode): http://localhost:4310
+
 - Key endpoints (subject to change as we stabilize):
   - POST /v1/context/capture
   - POST /v1/assist
