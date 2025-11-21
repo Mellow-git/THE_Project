@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/master.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/ContentView.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/ContentView.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/ContentView.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/ContentView.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/DashboardView.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/DashboardView.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/DashboardView.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/DashboardView~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/DashboardView.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/EnhancedDashboardView.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/EnhancedDashboardView.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/EnhancedDashboardView.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/EnhancedDashboardView~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/EnhancedDashboardView.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/OnboardingView.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/OnboardingView.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/OnboardingView.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/OnboardingView~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/OnboardingView.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/PersonalAIApp.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/PersonalAIApp.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/PersonalAIApp.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/PersonalAIApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/PersonalAIApp.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/SafariDataCollector.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariDataCollector.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariDataCollector.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariDataCollector~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariDataCollector.swiftdeps"
+  },
+  "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/PersonalAI/SafariExportView.swift": {
+    "dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariExportView.d",
+    "object": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariExportView.swift.o",
+    "swiftmodule": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariExportView~partial.swiftmodule",
+    "swift-dependencies": "/Users/himanshuyadav/THE_Project/PersonalAI-Mac/.build/arm64-apple-macosx/debug/PersonalAI.build/SafariExportView.swiftdeps"
+  }
+}

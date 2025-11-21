@@ -1,30 +1,17 @@
-// swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "PersonalAI",
-    platforms: [
-        .macOS(.v14)
-    ],
+    platforms: [.macOS(.v12)],
     products: [
-        .executable(
-            name: "PersonalAI",
-            targets: ["PersonalAI"]
-        ),
-    ],
-    dependencies: [
-        // No external dependencies needed for basic SwiftUI app
+        .executable(name: "PersonalAI", targets: ["PersonalAI"]) 
     ],
     targets: [
         .executableTarget(
             name: "PersonalAI",
             dependencies: [],
-            path: "Sources",
-            resources: [
-                .process("Assets.xcassets")
-            ]
-        ),
+            path: "PersonalAI"
+        )
     ]
 )
