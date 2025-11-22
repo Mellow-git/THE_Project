@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Instruction-Tuning Dataset Example",
+  "type": "object",
+  "required": ["instruction", "context", "response", "meta"],
+  "properties": {
+    "instruction": {"type": "string"},
+    "context": {"type": "string", "minLength": 1},
+    "response": {"type": "string"},
+    "meta": {
+      "type": "object",
+      "required": ["url", "title", "ts", "domain", "topic", "source_id", "chunk_id", "generated", "length_chars", "split_hint"],
+      "properties": {
+        "url": {"type": "string", "format": "uri"},
+        "title": {"type": ["string", "null"]},
+        "ts": {"type": ["string", "null"], "format": "date-time"},
+        "domain": {"type": "string"},
+        "topic": {"type": "string"},
+        "source_id": {"type": "string"},
+        "chunk_id": {"type": "string"},
+        "generated": {"type": "boolean"},
+        "length_chars": {"type": "integer", "minimum": 0},
+        "split_hint": {"type": "string", "enum": ["train", "val", "test"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+
+

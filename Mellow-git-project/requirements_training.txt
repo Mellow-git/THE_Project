@@ -1,0 +1,25 @@
+# LLaMA Fine-Tuning Requirements
+
+# Core dependencies
+torch>=2.0.0
+transformers>=4.30.0
+accelerate>=0.20.0
+datasets>=2.12.0
+
+# PEFT/LoRA
+peft>=0.4.0
+
+# Quantization
+bitsandbytes>=0.39.0
+
+# Training utilities
+wandb>=0.15.0  # Optional, for experiment tracking
+tqdm>=4.65.0
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0  # Optional, for data analysis
+
+# Optional: For better performance
+flash-attn>=2.0.0  # Optional, requires CUDA and specific setup
+

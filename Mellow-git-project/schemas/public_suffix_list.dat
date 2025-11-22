@@ -1,0 +1,51 @@
+// This is a sample of the Public Suffix List. In production, use the full file from https://publicsuffix.org/list/public_suffix_list.dat
+// ===BEGIN ICANN DOMAINS===
+ac
+com.ac
+edu.ac
+gov.ac
+net.ac
+mil.ac
+org.ac
+ad
+nom.ad
+ae
+co.ae
+net.ae
+org.ae
+sch.ae
+ac.ae
+gov.ae
+mil.ae
+af
+com.af
+edu.af
+gov.af
+net.af
+org.af
+ag
+com.ag
+org.ag
+net.ag
+co.ag
+nom.ag
+ai
+off.ai
+com.ai
+net.ai
+org.ai
+al
+com.al
+edu.al
+gov.al
+mil.al
+net.al
+org.al
+am
+co.am
+com.am
+org.am
+// ... (truncated for brevity)
+// ===END ICANN DOMAINS===
+
+
