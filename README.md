@@ -1,259 +1,251 @@
-# Mellow — Project README (Detailed Progress and Architecture)
+# Tiny Personalization Pipeline
 
-Mellow is a privacy‑first, on‑device personal AI for macOS. It learns from user‑selected data sources and live on‑screen context to deliver instant, relevant assistance—without sending information to the cloud. It’s designed for developers, students, and privacy‑conscious professionals who want fast, offline, screen‑aware help for coding, research, and daily workflows.
+**Turn your browsing history into a tiny, specialized AI model that runs on Raspberry Pi‑class devices.**
 
-## Current Status (Snapshot)
-- Core concept: on‑device assistant with a “Copilot Key” (global hotkey) for screen/context capture
-- Messaging: problems, solutions, target audience, market sizing (TAM/SAM), SWOT, “why now”
-- Implementation tracks active:
-  - macOS app skeleton (Xcode), hotkey service, sandbox/entitlements, permissions prompts
-  - Data pipeline MVP: local source registration → background ingestion → semantic index → retrieval
-  - Assist pipeline MVP: context capture → RAG → local inference with adapters → streaming responses
-  - UI shell: compact panel + command palette; ephemeral OCR and privacy controls
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svghttps://img.shields.io/badge/Raspberry%20Pi-4%2F5%20(4GB%2B.svgIt Does
 
-***
+This pipeline transforms your personal browsing data into a **tiny, privacy‑preserving language model** that understands your interests, habits, and learning patterns—without ever leaving your device.
 
-## Architecture Overview
+### Core Workflow
 
-- App layers:
-  - Shell (macOS app, menu bar helper, global hotkey)
-  - Context layer (active window text, selection, optional screenshot + OCR)
-  - Data layer (ingestion, chunking, embeddings, vector search)
-  - Assist layer (prompt assembly, tools, inference, streaming)
-  - Privacy layer (permissions, local‑only network policy, purge, logging)
+1. **Collect & Enrich**: Extracts browsing history from Safari/Chrome, enriches YouTube videos with metadata, and joins behavioral sessions from macOS knowledgeC.db.[1][2]
+2. **Teacher Distillation**: Uses a large teacher model (e.g., Qwen3‑Coder‑32B) to generate high‑quality training signals from your enriched data.[3][4]
+3. **Tiny Model Fine‑tuning**: Trains a **1–3B parameter student model** (e.g., Qwen2.5‑Coder‑3B) with LoRA/PEFT for efficient adaptation.[5][6]
+4. **Pi Deployment**: Converts the fine‑tuned model to **GGUF format** via llama.cpp for inference on Raspberry Pi‑class devices.[7][8][9]
 
-- Data residency:
-  - All processing is local by default. No cloud calls unless explicitly enabled in dev mode.
-  - Sensitive artifacts (screenshots/OCR) are ephemeral by default.
+### Key Features
+
+- **Privacy‑First**: All data stays local by default; no cloud uploads or telemetry.
+- **Modular Architecture**: Each stage is independent—collect, enrich, distill, train, package—no cross‑file fixes.
+- **Hardware‑Aware**: Estimates RAM usage and validates device compatibility before deployment.
+- **Reproducible**: Deterministic seeds, schema validation, and versioned configs ensure consistent results.
 
 ***
 
-## Xcode Project Structure and Approaches
+## Quick Start
 
-- Targets
-  - Mellow.app (main sandboxed app)
-  - MellowHelper (privileged helper for hotkeys and background ingestion)
-  - MellowCLI (optional CLI for power users and testing)
-- Languages/Frameworks
-  - Swift 5.10+, SwiftUI for primary UI
-  - AppKit for low‑level macOS APIs (event taps, accessibility, screen capture)
-  - Combine for reactive event streams
-- Minimum macOS
-  - macOS 13+ (Ventura) recommended; 12+ with guarded API paths
-- Entitlements and Capabilities
-  - App Sandbox enabled
-  - User Selected File access (security‑scoped bookmarks)
-  - Hardened Runtime
-  - Optional: com.apple.security.files.user-selected.read-write for data sources
-- Permissions Flow (system)
-  - Accessibility (AX) for reading selected text/active UI element
-  - Screen Recording (if screenshot/OCR is enabled)
-  - Full Disk Access (optional, only if user wants broad indexing; otherwise scoped)
-- Global Hotkey Options
-  - Approach A (recommended): Event tap + Carbon Hotkey API via a small Obj‑C/Swift bridge for reliable system‑wide capture
-  - Approach B: NSEvent.addGlobalMonitorForEvents (limited reliability when app not frontmost)
-  - Helper: LaunchAgent or SMAppService to keep the hotkey responder resident
-- Inter‑process Coordination
-  - XPC between app and helper for separation of privileges and responsiveness
-  - App Group container for shared small state (e.g., last context id)
+### 1. Install Dependencies
 
-***
+```bash
+git clone https://github.com/yourusername/tiny-personalization.git
+cd tiny-personalization
+pip install -r requirements.txt
+```
 
-## UI: Dependencies and Structure
+### 2. Collect & Enrich Your Data
 
-- UI Stack
-  - SwiftUI for views
-  - AppKit bridges for menu bar item, window level control, and focus handling
-- Dependencies
-  - Optional: KeyboardShortcuts (for quick setup), Defaults (lightweight settings), LaunchAtLogin
-  - Markdown rendering for responses (attributed text or a lightweight renderer)
-- Components
-  - Menu bar icon with quick actions (Capture Context, Last Results, Privacy)
-  - Compact panel (floating window) with:
-    - Prompt input
-    - Live streaming output
-    - Tabs: Assist | Data | Privacy
-  - Command palette (bring‑up via Copilot Key)
-  - Context preview strip: shows source (Active Window, Selection, URL), with “remove” toggles
-  - Privacy badge: indicates local‑only mode; click‑through to settings
-- UX Policies
-  - Ephemeral screenshots/OCR (off by default; session‑only if on)
-  - Clear indicators when any capture is active
-  - One‑click purge of local data and embeddings
+On macOS, grant Full Disk Access to Terminal (System Settings → Privacy & Security → Full Disk Access), then:[10]
+
+```bash
+# Collect browsing history (Safari + Chrome)
+python3 collect_history.py --browser=both --out enriched.jsonl
+
+# Validate enrichment quality
+python3 pipeline/validate_tiny_pipeline.py --enriched enriched.jsonl
+```
+
+### 3. Run Full Pipeline
+
+```bash
+# Distill → Fine‑tune → Package (takes ~30–60 min depending on dataset size)
+python3 pipeline/pipeline_tiny_personalization.py \
+  --enriched enriched.jsonl \
+  --output-dir ./my_model
+```
+
+### 4. Deploy to Raspberry Pi
+
+```bash
+# Copy package to Pi
+scp -r ./my_model/pi_package/* pi@<your-pi-ip>:~/models/
+
+# On Pi: run setup and start model
+ssh pi@<your-pi-ip> "cd ~/models && ./setup_pi.sh"
+ssh pi@<your-pi-ip> "cd ~/llama.cpp && ./main -m ~/models/pi_model.gguf -n 256 --temp 0.1"
+```
 
 ***
 
-## Data Pipeline (Current Implementation)
+## Detailed Setup
 
-- Source Registration
-  - Types: folder, file, repo, notes, browser history (if explicitly enabled)
-  - Security‑scoped bookmarks for persistent, user‑granted access
-  - Include/exclude patterns (e.g., “**/*.py”, “**/*.md”, exclude “**/node_modules/**”)
-- Ingestion
-  - Background worker (helper process) with throttling and OS quality‑of‑service set to “utility”
-  - File types supported now: .md, .txt, .pdf (text layer), .py/.js/.ts/.java/.go, .ipynb (text cells)
-  - Change detection: file mtime hash; incremental re‑indexing
-- Chunking
-  - Token‑aware chunking (~512–1,024 token windows) with 10–15% overlap
-  - Metadata: path, source_id, language, linespan, hash
-- Embeddings
-  - Local embedding model (small, CPU/NPU‑friendly); int8/int4 quant where supported
-  - Cosine similarity; normalized vectors; approximate search (HNSW) for speed
-- Index Storage
-  - Lightweight local store (SQLite + FTS5 or SQLite + sidecar .vec files; prototyping with SQLite)
-  - Namespace per source_id; global index for multi‑source queries
-- Search
-  - Top‑k retrieval with optional filters (source_id, path prefix, filetype, freshness)
-  - Reranking (optional) using a compact local reranker model
-- Privacy Controls
-  - Per‑source privacy flags (private, ephemeral)
-  - One‑click purge (deletes docs, chunks, embeddings, caches)
+### macOS Data Collection
+
+1. **Grant Full Disk Access**: Open System Settings → Privacy & Security → Full Disk Access, add Terminal (or your IDE).[11][10]
+2. **Run Collectors**: The pipeline reads Safari/Chrome history from `~/Library/` and knowledgeC.db from `/private/var/db/CoreDuet/Knowledge/`.[2][1]
+
+### Teacher Model Setup
+
+- **Local**: If you have a powerful GPU, run Qwen3‑Coder‑32B locally via Hugging Face Transformers.
+- **API**: Set `api_base` and `api_key` in `configs/teacher_config.json` for remote endpoints.
+
+### Training Hardware
+
+- **Minimum**: 16 GB RAM, modern GPU (RTX 3060+ recommended).
+- **Tiny Model**: Qwen2.5‑Coder‑3B fits in ~6 GB VRAM; LoRA reduces memory further.
+
+### Raspberry Pi Requirements
+
+- **Model**: Pi 4 or 5 with 4 GB RAM minimum.
+- **OS**: Raspberry Pi OS (64‑bit).
+- **Storage**: 4 GB free for model + llama.cpp.
 
 ***
 
-## Context Capture (Current Implementation)
+## Usage Examples
 
-- Sources
-  - Active window title and app bundle id
-  - Selected text via AX (when available)
-  - Clipboard (opt‑in)
-  - Optional: screenshot + OCR (disabled by default)
-- OCR
-  - Local OCR pipeline; process in memory, discard image unless user saves
-- URL/App Metadata
-  - Bundle ID, file URL (if accessible), language mode (from app or heuristics)
-- Context Object Example
-  {
-    "context_id": "ctx_2025_08_24_001",
-    "app": "Xcode",
-    "title": "Mellow.xcodeproj — Build Logs",
-    "text": "Linker error: undefined symbol ...",
-    "metadata": {
-      "bundle_id": "com.apple.dt.Xcode",
-      "path": "/Users/me/project/...",
-      "lang": "swift",
-      "ts": 1692870000
-    }
+### Individual Pipeline Steps
+
+```bash
+# 1. Distill teacher knowledge
+make distill
+
+# 2. Fine‑tune tiny model
+make train
+
+# 3. Package for Pi
+make package
+
+# 4. Full pipeline
+make pipeline
+
+# 5. Run tests
+make test
+```
+
+### Configuration
+
+Edit `configs/tiny_model_spec.json` to customize:
+
+```json
+{
+  "base_model_name": "Qwen/Qwen2.5-Coder-3B",
+  "max_context_length": 2048,
+  "target_quantization": "Q4_K_M",
+  "lora_config": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05
   }
+}
+```
+
+### Pi Inference
+
+```bash
+# Direct inference
+cd ~/llama.cpp
+./main -m ~/models/pi_model.gguf -n 256 --temp 0.1
+
+# Server mode for API access
+./server -m ~/models/pi_model.gguf --host 0.0.0.0 --port 8080
+```
 
 ***
 
-## Assist Pipeline (Current Implementation)
+## Architecture
 
-- Steps
-  1) Capture context (shortcut or UI)
-  2) Semantic search over local index (top‑k, optional rerank)
-  3) Prompt assembly: system + user prompt + context snippets + tool hints
-  4) Local inference with streaming tokens
-- Tools (MVP)
-  - code_explain (explain selected error/log/code)
-  - summarize_pdf (summarize a retrieved PDF section)
-  - search_local (query index with keyword+semantic)
-- Models
-  - Base: compact chat model (2–4B params, int4) for on‑device responsiveness
-  - Optional adapter: LoRA/adapter weights for local personalization
-- Output
-  - Token streaming to UI; copy/export; insert into editor (if safe and permitted)
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        Data Collection Layer                         │
+│  Safari/Chrome History → Enrichment (YouTube, knowledgeC.db) → JSONL│
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+┌───────────────────────────────▼─────────────────────────────────────┐
+│                      Teacher Distillation Layer                      │
+│  Large Teacher Model (Qwen3‑Coder‑32B) → Student SFT Dataset        │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+┌───────────────────────────────▼─────────────────────────────────────┐
+│                    Tiny Model Fine‑tuning Layer                      │
+│  Qwen2.5‑Coder‑3B + LoRA → Fine‑tuned Model (HF format)             │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+┌───────────────────────────────▼─────────────────────────────────────┐
+│                      Packaging & Deployment Layer                    │
+│  HF → GGUF (llama.cpp) → Pi Package (model + config + setup)        │
+└─────────────────────────────────────────────────────────────────────┘
+```
 
-***
-
-## Inference and Personalization
-
-- Adapters
-  - LoRA/adapter methods for targeted tasks (coding, summarization tone)
-  - Apply/revert instantly; adapters stored locally, user‑scoped
-- Tuning
-  - Lightweight local runs with cap on epochs/steps to control time and thermals
-  - Background priority; pause/resume when on battery or high thermals
-- Performance
-  - Preference for NPU/Metal backends where available; fallback to CPU
-  - Quantized models to balance latency and quality
+Each layer is **independent** and **testable**—no cross‑file modifications allowed.
 
 ***
 
-## Privacy and Security
+## Privacy & Security
 
-- Defaults
-  - Local‑only network mode; telemetry off by default
-  - Ephemeral screenshots/OCR; short‑lived caches
-- Controls
-  - Privacy page exposing permissions state, toggles, and purge
-  - Granular source‑level visibility and exclude patterns
-- Logging
-  - Minimal local logs for debugging; sensitive content redacted where possible
+- **Local‑First**: All browsing data stays on your Mac; teacher inference can run locally or with explicit opt‑in.[10]
+- **No Telemetry**: The pipeline does not send any data to external servers.
+- **User Control**: You control which data is collected, which teacher model is used, and when to delete artifacts.
 
 ***
 
-## Developer API (Local)
+## Troubleshooting
 
+### Permission Denied on macOS
 
-- Key endpoints (subject to change as we stabilize):
-  - POST /v1/context/capture
-  - POST /v1/assist
-  - POST /v1/data/sources
-  - POST /v1/data/ingest
-  - GET  /v1/data/search
-  - POST /v1/tune/start
-  - GET  /v1/privacy/status
-- CLI (optional)
-  - mellow context capture --ocr
-  - mellow assist -p "Explain selection"
-  - mellow data add ~/Projects --pattern "**/*.py"
-  - mellow data ingest --source src_101
+```bash
+# Add Terminal to Full Disk Access
+# System Settings → Privacy & Security → Full Disk Access → + → Terminal
+```
 
-***
+### Out‑of‑Memory During Training
 
-## Build & Run (Dev)
+- Reduce `batch_size` in `src/train_tiny_lora.py`
+- Use a smaller base model (e.g., Qwen2.5‑Coder‑1.5B)
+- Enable gradient checkpointing in the training script
 
-- Requirements
-  - Xcode 15+, macOS 13+
-  - Swift 5.10+
-- Steps
-  1) Clone repo; open Mellow.xcodeproj
-  2) Select “Mellow” scheme; run once to grant initial permissions
-  3) Enable helper (SMAppService) for global hotkey reliability
-  4) In app, add a test folder as a data source and run ingestion
-  5) Trigger Copilot Key; verify context preview and streaming output
+### Model Won’t Load on Pi
 
-***
+```bash
+# Check RAM
+free -h
 
-## Roadmap (Near Term)
+# Verify GGUF file
+cd ~/llama.cpp && ./main -m ~/models/pi_model.gguf --check-tensors
 
-- macOS Alpha
-  - End‑to‑end capture → retrieval → assist stable
-  - Minimal crash handling; safe fallbacks if permissions missing
-- UI/UX
-  - Command palette polish; quick intents (Explain, Summarize, Fix)
-  - Response actions: copy, insert, open file at linespan
-- Data
-  - More parsers (CSV, HTML, PPTX), better PDF handling
-  - Faster incremental indexing; background thermal management
-- Models
-  - Add code‑specialized adapter; optional reranker
-  - Auto‑selection of best local backend (NPU/Metal/CPU)
-- Privacy
-  - Per‑session “burn after reading” mode for OCR/context
+# Re‑package with smaller quantization
+# Edit configs/tiny_model_spec.json → "target_quantization": "Q3_K_M"
+```
+
+### Validation Failures
+
+```bash
+# Run comprehensive validation
+python3 pipeline/validate_tiny_pipeline.py --enriched enriched.jsonl --verbose
+```
 
 ***
 
 ## Contributing
 
-- Branching: feature/*, fix/*, docs/*
-- PRs: small, testable; include UI gifs/logs when relevant
-- Security: report privately; do not attach sensitive logs or paths
-- Style: SwiftLint optional; formatter rules in repo
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+**Guidelines**:
+- Keep scripts modular and self‑contained
+- Add tests for new functionality
+- Update documentation
+- Follow the existing code style
 
 ***
 
 ## License
 
-- To be decided (MIT/Apache‑2.0 recommended). Will be finalized before public beta.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ***
-## Next up!!
-- next steps will be exciting as ollama or some other low rank adapted llm will be integrated in the software workflow,,,,,,,, STAY TUNED
 
-## Contact
+## Acknowledgments
 
-Author: Mellow
-mehylekyle@gmail.com
+- **Qwen Team** for excellent open‑source coding models[4][3]
+- **llama.cpp** community for enabling LLM inference on edge devices[8][7]
+- **Hugging Face** for transformers and PEFT libraries[6][5]
+
+***
+
+**Ready to build your own tiny AI?** Start with `make pipeline` and watch your browsing habits become a personalized model that fits in your pocket!
+
